@@ -1,12 +1,10 @@
-from .simple_report import SimpleReport
 from collections import Counter
+from inventory_report.reports.simple_report import SimpleReport
 
 
-class CompleteReport(SimpleReport):
-    simple_report = SimpleReport()
-
+class CompleteReport():
     @staticmethod
-    def companiesProducts(products_list):
+    def generate(products_list):
         companies = [
             product["nome_da_empresa"] for product in products_list
             ]
@@ -16,14 +14,8 @@ class CompleteReport(SimpleReport):
         for company in companies_qty:
             stock_report += f"- {company}: {companies_qty[company]}\n"
 
-        return stock_report
-
-    @staticmethod
-    def generate(products_list):
-        simple_report = SimpleReport.generate(products_list)
-        companies_products = CompleteReport.companiesProducts(products_list)
         return (
-            f"{simple_report}\n"
+            f"{SimpleReport.generate(products_list)}\n"
             f"Produtos estocados por empresa:\n"
-            f"{companies_products}\n"
-        )
+            f"{stock_report}"
+            )

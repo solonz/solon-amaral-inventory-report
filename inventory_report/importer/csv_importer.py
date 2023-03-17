@@ -4,17 +4,14 @@ from inventory_report.importer.importer import Importer
 
 class CsvImporter(Importer):
     @staticmethod
-    def load_data(file):
-        data = CsvImporter.csv_format(file)
-        return data
-
-    def csv_format(path):
-        data = []
+    def load_data(path):
         if not path.endswith(".csv"):
             raise ValueError("Arquivo inválido")
+        else:
+            data = CsvImporter.csv_format(path)
+            return data
 
+    def csv_format(path):
         with open(path) as file:
-            file_reader = csv.DictReader(file)
-            for item in file_reader:
-                data.append(item)
-        return data
+            read_csv = csv.DictReader(file, delimiter=",", quotechar='"')
+            return [row for row in read_csv]

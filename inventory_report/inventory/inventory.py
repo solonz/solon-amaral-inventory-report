@@ -9,27 +9,27 @@ from inventory_report.reports.simple_report import SimpleReport
 
 class Inventory:
     @staticmethod
-    def import_data(path, type):
-
+    def read_file(path):
         if path.endswith(".csv"):
-            data = CsvImporter.load_data(path)
+            return CsvImporter.load_data(path)
 
         elif path.endswith(".json"):
-            data = JsonImporter.load_data(path)
+            return JsonImporter.load_data(path)
 
         elif path.endswith(".xml"):
-            data = XmlImporter.load_data(path)
+            return XmlImporter.load_data(path)
 
         else:
             raise ValueError("Formato de arquivo inválido")
 
-        return Inventory.generate(data, type)
-
     @staticmethod
-    def generate(data, type):
+    def import_data(path, type):
+
+        file = Inventory.read_file(path)
+
         if type == "simples":
-            return SimpleReport().generate(data)
+            return SimpleReport.generate(file)
         elif type == "completo":
-            return CompleteReport().generate(data)
+            return CompleteReport.generate(file)
         else:
             raise ValueError("Report Type Not Found!")
