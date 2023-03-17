@@ -11,13 +11,13 @@ class Inventory:
     @staticmethod
     def read_file(path):
         if path.endswith(".csv"):
-            return CsvImporter.load_data(path)
+            return CsvImporter.import_data(path)
 
         elif path.endswith(".json"):
-            return JsonImporter.load_data(path)
+            return JsonImporter.import_data(path)
 
         elif path.endswith(".xml"):
-            return XmlImporter.load_data(path)
+            return XmlImporter.import_data(path)
 
         else:
             raise ValueError("Formato de arquivo inválido")
