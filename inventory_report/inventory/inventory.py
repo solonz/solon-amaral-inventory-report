@@ -1,31 +1,35 @@
-import csv
-import json
-from ..reports.simple_report import SimpleReport
-from ..reports.complete_report import CompleteReport
-# from inventory_report.reports.simple_report import SimpleReport
-# from inventory_report.reports.complete_report import CompleteReport
+
+
+from inventory_report.importer.csv_importer import CsvImporter
+from inventory_report.importer.json_importer import JsonImporter
+from inventory_report.importer.xml_importer import XmlImporter
+from inventory_report.reports.complete_report import CompleteReport
+from inventory_report.reports.simple_report import SimpleReport
 
 
 class Inventory:
     @staticmethod
     def import_data(path, type):
-        with open(path, encoding="utf-8") as file:
-            if path.endswith(".csv"):
-                data_reader = csv.reader(file, delimiter=",", quotechar='"')
-            elif path.endswith(".json"):
-                data_content = file.read()
-                data_reader = json.loads(data_content())
 
-            # Usando o conceito de desempacotamento
-            header, *data = data_reader
+        if path.endswith(".csv"):
+            data = CsvImporter.load_data(path)
 
-        products_list = []
-        for product in data:
-            products_list.append(dict(zip(header, product)))
+        elif path.endswith(".json"):
+            data = JsonImporter.load_data(path)
 
-        if type == "simples":
-            return SimpleReport.generate(products_list)
-        elif type == "completo":
-            return CompleteReport.generate(products_list)
+        elif path.endswith(".xml"):
+            data = XmlImporter.load_data(path)
+
         else:
-            raise Exception("Report Type Not Found!")
+            raise ValueError("Formato de arquivo inválido")
+
+        return Inventory.generate(data, type)
+
+    @staticmethod
+    def generate(data, type):
+        if type == "simples":
+            return SimpleReport().generate(data)
+        elif type == "completo":
+            return CompleteReport().generate(data)
+        else:
+            raise ValueError("Report Type Not Found!")
