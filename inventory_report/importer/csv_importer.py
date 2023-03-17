@@ -4,7 +4,7 @@ from inventory_report.importer.importer import Importer
 
 class CsvImporter(Importer):
     @staticmethod
-    def load_data(path):
+    def import_data(path):
         if not path.endswith(".csv"):
             raise ValueError("Arquivo inválido")
         else:
